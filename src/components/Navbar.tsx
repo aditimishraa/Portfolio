@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Link from 'next/link';
 import NavLink from './NavLink';
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -26,44 +26,39 @@ const navLinks = [
 
 const Navbar = () => {
     const [isRainPlaying, setIsRainPlaying] = useState(false);
-    const [isBirdChirpingPlaying, setIsBirdChirpingPlaying] = useState(false);
-    const [rainAudio] = useState(new Audio('/songs/soft-rain-ambient-111154.mp3'));
-    const [birdChirpingAudio] = useState(new Audio('/songs/birds-singing-nature-sounds-8001.mp3'))
+  const rainAudioRef = useRef<HTMLAudioElement>(null);
 
-    const toggleRainSound = () => {
-        if (!isRainPlaying) {
-        rainAudio.play();
-        } else {
-        rainAudio.pause();
-        rainAudio.currentTime = 0;
-        }
-        setIsRainPlaying(!isRainPlaying);
-    };
+  const [isBirdChirpingPlaying, setIsBirdChirpingPlaying] = useState(false);
+  const birdChirpingAudioRef = useRef<HTMLAudioElement>(null);
 
-    useEffect(() => {
-        rainAudio.addEventListener('ended', () => {
-        setIsRainPlaying(false);
-        rainAudio.currentTime = 0;
-        });
-    }, [rainAudio]);
+  const toggleRainSound = () => {
+    const audio = rainAudioRef.current;
+
+    if (audio) {
+      if (!isRainPlaying) {
+        audio.play();
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      setIsRainPlaying(!isRainPlaying);
+    }
+  };
+
+  const toggleBirdChirpingSound = () => {
+    const audio = birdChirpingAudioRef.current;
+
+    if (audio) {
+      if (!isBirdChirpingPlaying) {
+        audio.play();
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      setIsBirdChirpingPlaying(!isBirdChirpingPlaying);
+    }
+  };
     
-    const toggleBirdChirpingSound = () => {
-
-        if (!isBirdChirpingPlaying) {
-            birdChirpingAudio.play();
-        } else {
-            birdChirpingAudio.pause();
-            birdChirpingAudio.currentTime = 0; // Reset the audio to the beginning
-        }
-
-        setIsBirdChirpingPlaying(!isBirdChirpingPlaying);
-    };
-    useEffect(() => {
-        birdChirpingAudio.addEventListener('ended', () => {
-            setIsBirdChirpingPlaying(false);
-            birdChirpingAudio.currentTime = 0;
-        });
-    }, [birdChirpingAudio]);
 
     const [navbarOpen, setNavbarOpen] = useState(false);
     
@@ -78,47 +73,19 @@ const Navbar = () => {
         LOGO
       </Link>
       <div className='flex flex-row justify-between'>
-      <button
-        id="rainButton"
-        className="px-4 py-2 shadow-md"
-        onClick={toggleRainSound}
-        >
+      <audio ref={rainAudioRef} src='/songs/soft-rain-ambient-111154.mp3' />
+      <button id="rainButton" className="px-4 py-2 shadow-md" onClick={toggleRainSound}>
         🌧️
-        </button>
-        <button
-        id="birdChirpingButton"
-        className="px-4 py-2 shadow-md"
-        onClick={toggleBirdChirpingSound}
-        >
+      </button>
+
+      <audio ref={birdChirpingAudioRef} src='/songs/birds-singing-nature-sounds-8001.mp3' />
+      <button id="birdChirpingButton" className="px-4 py-2 shadow-md" onClick={toggleBirdChirpingSound}>
         🐦
-        </button>
-      </div>
+      </button>
+    </div>
             
         </div>
-      {/* <Link
-        href={"/"}
-        className="text-2xl md:text-5xl text-white font-semibold"
-      >
-        LOGO
-      </Link>
-      <div >
-      <button
-        id="rainButton"
-        className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none"
-        onClick={playRainSound}
-        >
-        Click for Rain
-        </button>
-      </div> */}
-      {/* <div className="flex justify-center items-center h-screen">
-        <button
-        id="rainButton"
-        className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none"
-        onClick={playRainSound}
-        >
-        Click for Rain
-        </button>
-        </div> */}
+      
       <div className="mobile-menu block md:hidden">
         {!navbarOpen ? (
           <button
