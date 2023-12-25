@@ -70,7 +70,7 @@ const Navbar = () => {
         href={"/"}
         className="text-2xl md:text-5xl text-white font-semibold p-2"
       >
-        LOGO
+        ME.
       </Link>
       <div className='flex flex-row justify-between'>
       <audio ref={rainAudioRef} src='/songs/soft-rain-ambient-111154.mp3' />
