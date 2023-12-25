@@ -54,8 +54,10 @@ const HeroSection = () => {
                     src="/images/my-photo.jpg"
                     alt="hero image"
                     className="w-full h-full object-cover"
-                    layout="fill"
+                    layout="fixed"
                     objectFit="cover"
+                    width={500}
+                    height={400}
                 />
                 </div>
             </div>
